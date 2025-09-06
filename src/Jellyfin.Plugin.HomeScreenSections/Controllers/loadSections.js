@@ -40,6 +40,10 @@
         if (sectionKey === "DiscoverMovies" || sectionKey === "DiscoverTV" || sectionKey === "Discover") {
             return createDiscoverCards;
         }
+
+        if (sectionKey === "MyMediaSmall") {
+            return createLibraryButtons;
+        }
         
         return function(items) {
             return cardBuilder.getCardsHtml({
@@ -100,7 +104,27 @@
             html += '</div>';
             index++;
         });
-        
+
+        return html;
+    }
+
+    function createLibraryButtons(items) {
+        if (!items || !items.length) return '';
+
+        var html = '';
+
+        items.forEach(function (item) {
+            if (!item.Name || !item.Id) return;
+
+            var icon = (item.ProviderIds && item.ProviderIds.LibraryIcon) || 'folder';
+            var url = (item.ProviderIds && item.ProviderIds.LibraryUrl) || ('#/list.html?parentId=' + item.Id);
+
+            html += '<a is="emby-linkbutton" href="' + url + '" class="raised homeLibraryButton">';
+            html += '<span class="material-icons homeLibraryIcon ' + icon + '" aria-hidden="true"></span>';
+            html += '<span class="homeLibraryText">' + item.Name + '</span>';
+            html += '</a>';
+        });
+
         return html;
     }
     
